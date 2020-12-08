@@ -23,12 +23,33 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class SignInScreen extends AppCompatActivity {
+
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in_screen);
+
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(openFileInput("token")));
+            token = reader.readLine();
+            reader.close();
+            if(!token.equals("")){
+                startActivity(new Intent(SignInScreen.this, MainActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        .putExtra("token", token));
+                finish();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         TextView btSignIn = findViewById(R.id.btSignIn);
         btSignIn.setOnClickListener(new View.OnClickListener() {
