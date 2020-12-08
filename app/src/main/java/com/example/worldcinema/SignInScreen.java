@@ -1,5 +1,6 @@
 package com.example.worldcinema;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,16 +41,24 @@ public class SignInScreen extends AppCompatActivity {
                     showDialog("Один или все из полей ввода пусты", "Ошибка", SignInScreen.this);
                 }
                 else {
-                    sendSignIn(edEmail, edPassword);
+                    sendSignIn(edEmail.getText().toString(), edPassword.getText().toString());
                 }
+            }
+        });
+
+        TextView btSignUp = findViewById(R.id.btSignUp);
+        btSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(SignInScreen.this, SignUpScreen.class), 1);
             }
         });
     }
 
-    private void sendSignIn(EditText email, EditText password){
+    private void sendSignIn(String email, String password){
         Uri uri = Uri.parse("http://cinema.areas.su/auth/login").buildUpon()
-                .appendQueryParameter("email", email.getText().toString())
-                .appendQueryParameter("password", password.getText().toString()).build();
+                .appendQueryParameter("email", email)
+                .appendQueryParameter("password", password).build();
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, uri.toString(), null, new Response.Listener<JSONObject>() {
             @Override
@@ -86,5 +95,13 @@ public class SignInScreen extends AppCompatActivity {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String email = data.getStringExtra("email");
+        String password = data.getStringExtra("password");
+        sendSignIn(email, password);
     }
 }
