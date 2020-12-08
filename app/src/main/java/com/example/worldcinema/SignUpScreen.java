@@ -52,10 +52,10 @@ public class SignUpScreen extends AppCompatActivity {
                         || edPassword.getText().toString().isEmpty()){
                     SignInScreen.showDialog("Один или все из полей ввода пусты", "Ошибка", SignUpScreen.this);
                 }
-                if (edPassword.getText().toString().equals(edPasswordConfirm.getText().toString())) {
+                /*if (!edPassword.getText().toString().equals(edPasswordConfirm.getText().toString())) {
                     SignInScreen.showDialog("Пароли не совпадают", "Ошибка", SignUpScreen.this);
 
-                }
+                }*/
                 else {
                     sendSignUp(edEmail.getText().toString(), edPassword.getText().toString(), edFirstName.getText().toString(), edLastName.getText().toString());
                 }
