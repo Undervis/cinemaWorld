@@ -44,7 +44,8 @@ class FilmsRecyclerAdapter extends RecyclerView.Adapter<FilmsRecyclerAdapter.Vie
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                MainActivity mainActivity = new MainActivity();
+                Context context = mainActivity.getApplicationContext();
             }
         });
     }
