@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         token = intent.getStringExtra("token");
 
         recyclerView = findViewById(R.id.recyclerTrands);
-        LinearLayout layout = findViewById(R.id.linear);
+
         NestedScrollView scrollView = findViewById(R.id.scrollTrands);
         scrollView.setOnClickListener(new View.OnClickListener() {
             @Override
