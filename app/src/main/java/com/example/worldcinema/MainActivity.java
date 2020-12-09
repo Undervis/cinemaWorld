@@ -2,6 +2,7 @@ package com.example.worldcinema;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,9 +11,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,24 +57,15 @@ public class MainActivity extends AppCompatActivity {
         token = intent.getStringExtra("token");
 
         recyclerView = findViewById(R.id.recyclerTrands);
-
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        LinearLayout layout = findViewById(R.id.linear);
+        NestedScrollView scrollView = findViewById(R.id.scrollTrands);
+        scrollView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, MovieScreen.class).putExtra("tag", "3"));
             }
         });
+
 
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(openFileOutput("token", MODE_PRIVATE)));
@@ -158,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, uri.toString(), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+
+
                 filmsList.clear();
                 FilmsRecyclerAdapter adapter = new FilmsRecyclerAdapter(getApplicationContext(), filmsList);
                 adapter.notifyDataSetChanged();
@@ -167,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     for(int i = 0; i <= 9; i++){
                         JSONObject object = response.getJSONObject(i);
+                        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
                         filmsList.add(new Films( "http://cinema.areas.su/up/images/" + object.getString("poster"), object.getString("name"), object.getString("movieId")));
                     }
                 } catch (JSONException e) {

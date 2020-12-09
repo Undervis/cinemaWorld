@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="main_color">#332973</color>
     <color name="secondary_color">#EF3A01</color>
+    <color name="years_16">#F26E45</color>
+    <color name="years_12">#F4A992</color>
+    <color name="years_6">#FAF3C9</color>
 </resources>
