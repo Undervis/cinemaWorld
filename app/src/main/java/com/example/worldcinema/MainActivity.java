@@ -14,10 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -58,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerTrands);
 
+
+
         NestedScrollView scrollView = findViewById(R.id.scrollTrands);
         scrollView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         tvBanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MovieScreen.class).putExtra("tag", tvBanner.getTag().toString()));
+                //Инициализация плеера с id фильма
+                initPlayer("2");
             }
         });
 
@@ -112,6 +118,94 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public void initPlayer(String movieId){
+        //ссылка для получения эпизодов фильма
+        String urlVideo = "http://cinema.areas.su/movies/" + movieId + "/episodes";
+
+        //инициализация элементов
+        VideoView playerSmall = findViewById(R.id.videoPlayerSmall);
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        LinearLayout layout = findViewById(R.id.layout);
+        LinearLayout layoutSmall = findViewById(R.id.layoutSmall);
+        VideoView player = findViewById(R.id.videoPlayer);
+        ImageButton btHide = findViewById(R.id.btHide);
+
+        //Запрос к API для получение необходимых ссылок и отображение плеера
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, urlVideo, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    layout.setVisibility(View.VISIBLE);
+                    playerSmall.setVisibility(View.INVISIBLE);
+                    JSONObject object = response.getJSONObject(0);
+                    player.setVideoURI(Uri.parse("http://cinema.areas.su/up/video/" + object.getString("preview")));
+                    player.start();
+                    player.setMediaController(new MediaController(MainActivity.this));
+                    player.setTag("http://cinema.areas.su/up/video/" + object.getString("preview"));
+                    layout.setTag(object.get("name"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        queue.add(request);
+
+        //обработка нажатий кнопок
+        btHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playerSmall.setVisibility(View.VISIBLE);
+                layout.setVisibility(View.GONE);
+                layoutSmall.setVisibility(View.VISIBLE);
+                TextView textView = findViewById(R.id.tvFilimPlayerName);
+                textView.setText(layout.getTag().toString());
+                player.pause();
+                playerSmall.setVideoURI(Uri.parse(player.getTag().toString()));
+                playerSmall.seekTo(player.getCurrentPosition());
+                playerSmall.start();
+            }
+        });
+
+        playerSmall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layoutSmall.setVisibility(View.GONE);
+                layout.setVisibility(View.VISIBLE);
+                playerSmall.setVisibility(View.INVISIBLE);
+                player.seekTo(playerSmall.getCurrentPosition());
+                playerSmall.stopPlayback();
+                player.start();
+            }
+        });
+
+        ImageButton btStop = findViewById(R.id.btStop);
+        btStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(playerSmall.isPlaying()){
+                    playerSmall.pause();
+                }
+                else {
+                    playerSmall.start();
+                }
+            }
+        });
+
+        ImageButton btClose = findViewById(R.id.btClose);
+        btClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playerSmall.stopPlayback();
+                layoutSmall.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void getBannerCover(){
