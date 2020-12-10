@@ -163,7 +163,12 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     for(int i = 0; i <= 9; i++){
                         JSONObject object = response.getJSONObject(i);
-                        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+                       // LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+                        //View view = inflater.inflate(R.layout.recycler_film_item, null, false);
+                       // LinearLayout linearLayout = findViewById(R.id.linear);
+                       // ImageView imageView = view.findViewById(R.id.imFilm);
+                        //Picasso.get().load("http://cinema.areas.su/up/images/" + object.getString("poster")).into(imageView);
+                        //linearLayout.addView(view);
                         filmsList.add(new Films( "http://cinema.areas.su/up/images/" + object.getString("poster"), object.getString("name"), object.getString("movieId")));
                     }
                 } catch (JSONException e) {

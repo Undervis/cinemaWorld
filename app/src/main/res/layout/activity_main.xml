@@ -101,7 +101,7 @@
                 <LinearLayout
                     android:id="@+id/linear"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="144dp"
                     android:orientation="horizontal">
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -109,8 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:scrollbars="horizontal"
-                        android:visibility="visible" />
+                        android:scrollbars="horizontal" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
